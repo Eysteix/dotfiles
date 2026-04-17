@@ -1,0 +1,131 @@
+{
+	"layer": "top",
+	"position": "top",
+	"height": 30,
+	"margin-top": 10,
+	"margin-left": 16,
+	"margin-right": 16,
+	"modules-left": [
+		"clock"
+	],
+	"modules-center": [
+		"hyprland/workspaces"
+	],
+	"modules-right": [
+		"network",
+		"pulseaudio",
+		"battery",
+		"custom/powerprofile",
+		"custom/swaync"
+	],
+	"hyprland/workspaces": {
+		"format": "{icon}",
+		"on-click": "activate",
+		"format-icons": {
+			"1": "  ",
+			"2": " 󰾔 ",
+			"3": " 󰙯 ",
+			"4": " 󰓓 ",
+			"5": " 󰓇 ",
+			"6": "  ",
+			"7": "  ",
+			"urgent": "",
+			"default": ""
+		},
+		"active-only": false,
+		"all-outputs": true,
+		"sort-by-number": true,
+		"persistent-workspaces": {
+			"*": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7
+			]
+		}
+	},
+	"clock": {
+		"format": "󰃰  {:%I:%M %p}",
+		"format-alt": "󰃰  {:%A, %d %b}",
+		"tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+	},
+	"network": {
+		"interface": "wl*",
+		"interval": 2,
+		"format-wifi": "󰤨  {essid}    󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+		"format-ethernet": "󰈀  {ifname}    󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+		"format-disconnected": "󰤭  No Signal",
+		"format-linked": "󰈀  No IP",
+		"tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}",
+		"tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+		"on-click": "~/.config/waybar/scripts/network-menu.sh"
+	},
+	"custom/netsep": {
+		"format": "·",
+		"tooltip": false
+	},
+	"pulseaudio": {
+		"format": "{icon}  {volume}%",
+		"format-muted": "󰝟  Muted",
+		"format-icons": {
+			"headphone": "󰋋",
+			"hands-free": "󰋎",
+			"headset": "󰋎",
+			"default": [
+				"󰕿",
+				"󰖀",
+				"󰕾"
+			]
+		},
+		"on-click": "~/.config/waybar/scripts/audio-menu.sh",
+		"on-click-right": "~/.config/waybar/scripts/audio-menu.sh source",
+		"scroll-step": 5
+	},
+	"custom/powerprofile": {
+		"exec": "~/.config/waybar/scripts/powerprofile.sh",
+		"interval": 5,
+		"format": "{}",
+		"on-click": "~/.config/waybar/scripts/powerprofile.sh cycle",
+		"tooltip": false
+	},
+	"custom/swaync": {
+		"tooltip": false,
+		"format": "{icon}",
+		"format-icons": {
+			"notification": "󱅫",
+			"none": "󰂚",
+			"dnd-notification": "󰂛",
+			"dnd-none": "󰂛",
+			"inhibited-notification": "󱅫",
+			"inhibited-none": "󰂚",
+			"dnd-inhibited-notification": "󰂛",
+			"dnd-inhibited-none": "󰂛"
+		},
+		"return-type": "json",
+		"exec-if": "which swaync-client",
+		"exec": "swaync-client -swb",
+		"on-click": "swaync-client -t -sw",
+		"on-click-right": "swaync-client -d -sw",
+		"escape": true
+	},
+	"battery": {
+		"states": {
+			"good": 95,
+			"warning": 30,
+			"critical": 15
+		},
+		"format": "{icon}  {capacity}%",
+		"format-charging": "󰂄  {capacity}%",
+		"format-plugged": "󰚥  {capacity}%",
+		"format-icons": [
+			" ",
+			" ",
+			" ",
+			" ",
+			" "
+		]
+	}
+}
