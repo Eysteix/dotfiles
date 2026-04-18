@@ -1,43 +1,60 @@
 #!/usr/bin/env bash
 # ~/.config/hypr/scripts/wallpaper.sh
-# Cycles through all images in WALLPAPER_DIR on an interval
+# Cycles through all images in WALLPAPER_DIR on an interval using awww.
+# SIGUSR1 skips to the next wallpaper immediately.
 
 WALLPAPER_DIR="$HOME/Pictures"
 INTERVAL=300   # seconds between changes (300 = 5 minutes)
+TRANSITION_TYPE="any"
+TRANSITION_DURATION=1
 
-# Supported formats
-EXTENSIONS=("jpg" "jpeg" "png" "webp" "gif")
+PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/wallpaper.pid"
+
+EXTENSIONS=("jpg" "jpeg" "png" "webp" "gif" "bmp")
 
 get_images() {
-  local pattern=""
   for ext in "${EXTENSIONS[@]}"; do
     find "$WALLPAPER_DIR" -maxdepth 2 -iname "*.${ext}" 2>/dev/null
   done | sort -u
 }
 
-preload_and_set() {
-  local img="$1"
+wait_for_daemon() {
+  for _ in {1..40}; do
+    awww query >/dev/null 2>&1 && return 0
+    sleep 0.25
+  done
+  return 1
+}
 
-  # Preload the image into hyprpaper
-  hyprctl hyprpaper preload "$img"
+sleep_pid=""
+trap 'kill "$sleep_pid" 2>/dev/null' USR1
 
-  # Set on all monitors
-  local monitors
-  monitors=$(hyprctl monitors -j | grep -oP '"name":\s*"\K[^"]+')
-
-  while IFS= read -r monitor; do
-    hyprctl hyprpaper wallpaper "$monitor,$img"
-  done <<< "$monitors"
-
-  # Unload everything except current to free RAM
-  hyprctl hyprpaper unload all 2>/dev/null
-  hyprctl hyprpaper preload "$img"
-  hyprctl hyprpaper wallpaper ",$img"
+interruptible_sleep() {
+  sleep "$1" &
+  sleep_pid=$!
+  wait "$sleep_pid" 2>/dev/null
+  sleep_pid=""
 }
 
 main() {
-  # Wait for hyprpaper to be ready
-  sleep 2
+  # Prevent duplicate instances
+  if [[ -f "$PIDFILE" ]]; then
+    local existing
+    existing=$(cat "$PIDFILE" 2>/dev/null)
+    if [[ -n "$existing" ]] && kill -0 "$existing" 2>/dev/null; then
+      echo "wallpaper.sh already running (pid $existing)" >&2
+      exit 0
+    fi
+  fi
+  echo $$ > "$PIDFILE"
+  trap 'rm -f "$PIDFILE"' EXIT
+
+  if ! wait_for_daemon; then
+    # Try to start awww-daemon ourselves if it isn't running yet
+    awww-daemon >/dev/null 2>&1 &
+    disown
+    wait_for_daemon || { echo "awww-daemon not reachable" >&2; exit 1; }
+  fi
 
   local images=()
   while IFS= read -r line; do
@@ -45,27 +62,33 @@ main() {
   done < <(get_images)
 
   if [[ ${#images[@]} -eq 0 ]]; then
-    echo "No images found in $WALLPAPER_DIR"
+    echo "No images found in $WALLPAPER_DIR" >&2
     exit 1
   fi
 
-  # Shuffle order
   mapfile -t images < <(printf '%s\n' "${images[@]}" | shuf)
 
   local index=0
   while true; do
     local current="${images[$index]}"
     echo "Setting wallpaper: $current"
-    preload_and_set "$current"
+
+    if awww img "$current" \
+         --transition-type "$TRANSITION_TYPE" \
+         --transition-duration "$TRANSITION_DURATION" 2>&1; then
+      # Regenerate matugen palette — its post-hooks reload waybar/swaync/hyprland/kitty
+      matugen --prefer saturation image "$current" >/dev/null 2>&1 || \
+        echo "matugen failed for $current" >&2
+      interruptible_sleep "$INTERVAL"
+    else
+      echo "awww img failed for $current" >&2
+      interruptible_sleep 2
+    fi
 
     index=$(( (index + 1) % ${#images[@]} ))
-
-    # Re-shuffle when we've gone through all images
     if [[ $index -eq 0 ]]; then
       mapfile -t images < <(printf '%s\n' "${images[@]}" | shuf)
     fi
-
-    sleep "$INTERVAL"
   done
 }
 

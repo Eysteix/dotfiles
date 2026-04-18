@@ -1,373 +1,386 @@
 /* ============================================================
-   SwayNC — Catppuccin Mocha
-   Matches waybar pill + wofi aesthetic
+   SwayNC — Material You (matugen)
+   Glass panel · elevated cards · accent-driven toggles
    ============================================================ */
 
-/* ---------- Catppuccin Mocha palette ---------- */
+@import url("colors.css");
+
 * {
-  font-family: "JetBrainsMono Nerd Font Mono", monospace;
-  font-size: 13px;
-  font-weight: bold;
-  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+	font-family: "JetBrainsMono Nerd Font Mono", monospace;
+	font-size: 13px;
+	font-weight: 500;
+	transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
-/* ---------- Notification popup window ---------- */
-notificationwindow,
+/* ---------- Floating popup & blank drag window ---------- */
+/* notificationwindow, */
 blankwindow {
-  background: transparent;
+	background: transparent;
 }
 
-/* ---------- Control Center panel ---------- */
+/* ---------- Control Center shell ---------- */
 .control-center {
-  background: rgba(30, 30, 46, 0.88);
-  border: 1px solid rgba(69, 71, 90, 0.60);
-  border-radius: 16px;
-  padding: 10px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.50);
+	background: alpha(@surface, 0.95);
+	/* border: 1px solid alpha(@outline_variant, 0.55); */
+	border-radius: 10px;
+	padding: 14px;
+	height: 100%;
+	margin: 0 12px;
+	box-shadow:
+		0 20px 60px alpha(@shadow, 0.55),
+		0 1px 0 alpha(@outline, 0.15) inset;
 }
 
-/* ---------- CC Title row ---------- */
+/* ---------- Title row (clear-all, DND label, etc.) ---------- */
 .widget-title {
-  color: #cdd6f4;
-  font-size: 15px;
-  padding: 8px 12px 6px 12px;
+	padding: 4px 8px 10px 8px;
 }
 
-.widget-title > label {
-  font-size: 15px;
-  font-weight: bold;
-  color: #cdd6f4;
+.widget-title>label {
+	font-size: 16px;
+	font-weight: bold;
+	color: @on_surface;
 }
 
 .widget-title button,
 .clear-all-button {
-  background: rgba(49, 50, 68, 0.80);
-  border: 1px solid rgba(69, 71, 90, 0.50);
-  border-radius: 999px;
-  color: #a6adc8;
-  font-size: 12px;
-  padding: 4px 12px;
-  min-height: 0;
-  min-width: 0;
+	background: alpha(@surface_container_high, 0.85);
+	border: 1px solid alpha(@outline_variant, 0.5);
+	border-radius: 10px;
+	color: @on_surface_variant;
+	font-size: 12px;
+	padding: 6px 14px;
+	min-height: 0;
+	min-width: 0;
 }
 
 .widget-title button:hover,
 .clear-all-button:hover {
-  background: rgba(203, 166, 247, 0.20);
-  color: #cba6f7;
-  border-color: rgba(203, 166, 247, 0.40);
+	background: alpha(@primary, 0.22);
+	color: @primary;
+	border-color: alpha(@primary, 0.55);
 }
 
-/* ---------- Do Not Disturb toggle ---------- */
+/* ---------- DND toggle ---------- */
 .widget-dnd {
-  padding: 6px 12px;
-  border-top: 1px solid rgba(69, 71, 90, 0.30);
-  border-bottom: 1px solid rgba(69, 71, 90, 0.30);
-  margin: 4px 0;
+	padding: 10px 12px;
+	margin: 6px 2px;
+	background: alpha(@surface_container, 0.75);
+	/* border: 1px solid alpha(@outline_variant, 0.4); */
+	border-radius: 10px;
 }
 
-.widget-dnd > label {
-  color: #a6adc8;
-  font-size: 13px;
+.widget-dnd>label {
+	color: @on_surface;
+	font-size: 13px;
+	font-weight: 500;
 }
 
-.widget-dnd > switch {
-  background: rgba(49, 50, 68, 0.80);
-  border: 1px solid rgba(69, 71, 90, 0.60);
-  border-radius: 999px;
-  min-height: 20px;
-  min-width: 44px;
+.widget-dnd>switch {
+	background: alpha(@surface_container_high, 0.9);
+	border: 1px solid alpha(@outline_variant, 0.6);
+	border-radius: 10px;
+	min-height: 22px;
+	min-width: 46px;
 }
 
-.widget-dnd > switch:checked {
-  background: rgba(243, 139, 168, 0.30);
-  border-color: rgba(243, 139, 168, 0.60);
+.widget-dnd>switch:checked {
+	background: @primary;
+	border-color: @primary;
 }
 
-.widget-dnd > switch slider {
-  background: #6c7086;
-  border-radius: 999px;
-  min-height: 16px;
-  min-width: 16px;
-  margin: 1px;
+.widget-dnd>switch slider {
+	background: @on_surface_variant;
+	border-radius: 10px;
+	min-height: 18px;
+	min-width: 18px;
+	margin: 1px;
 }
 
-.widget-dnd > switch:checked slider {
-  background: #f38ba8;
+.widget-dnd>switch:checked slider {
+	background: @on_primary;
 }
 
-/* ---------- MPRIS (music player) ---------- */
+/* ---------- MPRIS player card ---------- */
 .widget-mpris {
-  padding: 8px 4px 4px 4px;
+	padding: 8px 4px 2px 4px;
 }
 
 .widget-mpris-player {
-  background: rgba(49, 50, 68, 0.70);
-  border: 1px solid rgba(69, 71, 90, 0.50);
-  border-radius: 14px;
-  padding: 10px 14px;
-  margin: 4px;
+	background: linear-gradient(135deg,
+			alpha(@primary_container, 0.35) 0%,
+			alpha(@tertiary_container, 0.35) 100%);
+	border: 1px solid alpha(@primary, 0.35);
+	border-radius: 10px;
+	padding: 14px 16px;
+	margin: 4px;
+	box-shadow: 0 4px 20px alpha(@shadow, 0.35);
 }
 
 .widget-mpris-album-art {
-  border-radius: 10px;
-  margin-right: 10px;
+	border-radius: 10px;
+	margin-right: 12px;
+	box-shadow: 0 4px 16px alpha(@shadow, 0.5);
 }
 
 .widget-mpris-title {
-  font-weight: bold;
-  font-size: 14px;
-  color: #cdd6f4;
+	font-weight: bold;
+	font-size: 14px;
+	color: @on_surface;
 }
 
 .widget-mpris-subtitle {
-  font-size: 12px;
-  color: #a6adc8;
+	font-size: 12px;
+	color: @on_surface_variant;
 }
 
 .widget-mpris button {
-  background: transparent;
-  border: none;
-  border-radius: 8px;
-  color: #a6adc8;
-  padding: 4px 8px;
-  min-height: 0;
-  min-width: 0;
+	background: transparent;
+	border: none;
+	border-radius: 10px;
+	color: @on_surface;
+	padding: 6px 10px;
+	min-height: 0;
+	min-width: 0;
 }
 
 .widget-mpris button:hover {
-  background: rgba(203, 166, 247, 0.15);
-  color: #cba6f7;
+	background: alpha(@primary, 0.22);
+	color: @primary;
 }
 
-/* ---------- Quick buttons grid ---------- */
+/* ---------- Quick-toggle grid ---------- */
 .widget-buttons-grid {
-  padding: 8px 4px;
-  border-bottom: 1px solid rgba(69, 71, 90, 0.30);
-  margin-bottom: 4px;
+	padding: 10px 4px;
+	margin-bottom: 6px;
 }
 
-.widget-buttons-grid > flowbox > flowboxchild > button {
-  background: rgba(49, 50, 68, 0.70);
-  border: 1px solid rgba(69, 71, 90, 0.50);
-  border-radius: 12px;
-  color: #a6adc8;
-  font-size: 20px;
-  padding: 12px;
-  margin: 4px;
-  min-height: 0;
-  min-width: 60px;
+.widget-buttons-grid>flowbox>flowboxchild>button {
+	background: alpha(@surface_container, 0.85);
+	border: 1px solid alpha(@outline_variant, 0.5);
+	border-radius: 10px;
+	color: @on_surface_variant;
+	font-size: 22px;
+	padding: 14px;
+	margin: 5px;
+	min-height: 0;
+	min-width: 62px;
 }
 
-.widget-buttons-grid > flowbox > flowboxchild > button:hover {
-  background: rgba(69, 71, 90, 0.80);
-  color: #cdd6f4;
+.widget-buttons-grid>flowbox>flowboxchild>button:hover {
+	background: alpha(@primary, 0.18);
+	color: @primary;
+	border-color: alpha(@primary, 0.55);
 }
 
-.widget-buttons-grid > flowbox > flowboxchild > button.active {
-  background: rgba(203, 166, 247, 0.20);
-  border-color: rgba(203, 166, 247, 0.50);
-  color: #cba6f7;
+.widget-buttons-grid>flowbox>flowboxchild>button.active {
+	background: @primary;
+	border-color: @primary;
+	color: @on_primary;
+	box-shadow: 0 4px 14px alpha(@primary, 0.5);
 }
 
 /* ---------- Empty state ---------- */
 .notification-group .empty-state-text {
-  color: #6c7086;
-  font-size: 14px;
-  padding: 24px;
+	color: @on_surface_variant;
+	font-size: 14px;
+	padding: 24px;
 }
 
-/* ---------- Notification group headers ---------- */
+/* ---------- Group headers ---------- */
 .notification-group-headers {
-  color: #a6adc8;
-  font-size: 12px;
-  padding: 4px 8px;
+	color: @on_surface_variant;
+	font-size: 12px;
+	padding: 4px 8px;
 }
 
-.notification-group-collapse-button,
+.notification-group-collapse-button {
+	background: transparent;
+	border: none;
+	color: @on_surface_variant;
+	padding: 2px 6px;
+}
+
 .notification-group-collapse-button:hover {
-  background: transparent;
-  border: none;
-  color: #6c7086;
-  padding: 2px 6px;
+	background: alpha(@primary, 0.15);
+	color: @primary;
 }
 
-/* ---------- Individual notification (popup + CC) ---------- */
+/* ---------- Notification row (popup + CC) ---------- */
 .notification-row {
-  padding: 4px 0;
+	padding: 4px 2px;
 }
 
 .notification-row:focus,
 .notification-row:hover {
-  background: transparent;
+	background: transparent;
 }
 
 .notification {
-  background: rgba(30, 30, 46, 0.92);
-  border: 1px solid rgba(69, 71, 90, 0.55);
-  border-radius: 14px;
-  padding: 12px 14px;
-  margin: 0 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.40);
-  color: #cdd6f4;
+	background: alpha(@surface_container, 0.95);
+	border: 1px solid alpha(@outline_variant, 0.5);
+	border-radius: 10px;
+	padding: 12px 14px;
+	margin: 0 4px;
+	box-shadow: 0 6px 20px alpha(@shadow, 0.4);
+	color: @on_surface;
 }
 
-/* popup (floating) notification */
 notificationwindow .notification {
-  background: rgba(30, 30, 46, 0.94);
-  border: 1px solid rgba(69, 71, 90, 0.60);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+	background: alpha(@surface_container_high, 0.96);
+	border: 1px solid alpha(@primary, 0.35);
+	box-shadow: 0 16px 48px alpha(@shadow, 0.6);
 }
 
 .notification:hover {
-  background: rgba(49, 50, 68, 0.90);
-  border-color: rgba(203, 166, 247, 0.30);
+	background: alpha(@surface_container_high, 0.92);
+	border-color: alpha(@primary, 0.4);
 }
 
-/* urgency colours */
 .notification.critical {
-  border-color: rgba(243, 139, 168, 0.70);
-  background: rgba(30, 30, 46, 0.95);
+	border-color: alpha(@error, 0.75);
+	box-shadow: 0 6px 22px alpha(@error, 0.28);
 }
 
 .notification.low {
-  border-color: rgba(69, 71, 90, 0.40);
+	border-color: alpha(@outline_variant, 0.35);
 }
 
-/* ---------- Notification internals ---------- */
+/* ---------- Notification text ---------- */
 .notification-content {
-  padding: 0;
+	padding: 0;
 }
 
 .summary {
-  font-size: 14px;
-  font-weight: bold;
-  color: #cdd6f4;
+	font-size: 14px;
+	font-weight: bold;
+	color: @on_surface;
 }
 
 .time {
-  font-size: 11px;
-  color: #6c7086;
-  padding-right: 4px;
+	font-size: 11px;
+	color: @on_surface_variant;
+	padding-right: 4px;
 }
 
 .body {
-  font-size: 13px;
-  color: #a6adc8;
-  font-weight: normal;
+	font-size: 13px;
+	color: @on_surface_variant;
+	font-weight: normal;
 }
 
 .app-name {
-  font-size: 11px;
-  color: #6c7086;
-  font-weight: normal;
+	font-size: 11px;
+	color: @on_surface_variant;
+	font-weight: normal;
 }
 
 .notification-default-action {
-  background: transparent;
-  border: none;
-  border-radius: 14px;
-  padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: 10px;
+	padding: 0;
 }
 
 .notification-default-action:hover {
-  background: transparent;
+	background: transparent;
 }
 
-/* ---------- Action buttons (inside notification) ---------- */
+/* ---------- Action buttons ---------- */
 .notification-action {
-  background: rgba(49, 50, 68, 0.70);
-  border: 1px solid rgba(69, 71, 90, 0.50);
-  border-radius: 8px;
-  color: #89b4fa;
-  font-size: 12px;
-  padding: 4px 12px;
-  margin: 4px 2px 0 2px;
-  min-height: 0;
+	background: alpha(@surface_container_high, 0.85);
+	border: 1px solid alpha(@outline_variant, 0.55);
+	border-radius: 10px;
+	color: @primary;
+	font-size: 12px;
+	padding: 6px 14px;
+	margin: 6px 2px 0 2px;
+	min-height: 0;
 }
 
 .notification-action:hover {
-  background: rgba(137, 180, 250, 0.15);
-  border-color: rgba(137, 180, 250, 0.40);
-  color: #cdd6f4;
-}
-
-.notification-action:last-child {
-  border-bottom-right-radius: 8px;
+	background: alpha(@primary, 0.18);
+	border-color: alpha(@primary, 0.6);
+	color: @on_surface;
 }
 
 .notification-action:first-child {
-  border-bottom-left-radius: 8px;
+	border-bottom-left-radius: 10px;
+}
+
+.notification-action:last-child {
+	border-bottom-right-radius: 10px;
 }
 
 /* ---------- Close button ---------- */
 .close-button {
-  background: rgba(69, 71, 90, 0.60);
-  border: none;
-  border-radius: 100%;
-  color: #a6adc8;
-  padding: 0;
-  margin-top: 6px;
-  margin-right: 6px;
-  min-width: 22px;
-  min-height: 22px;
+	background: alpha(@surface_container_high, 0.75);
+	border: none;
+	border-radius: 10px;
+	color: @on_surface_variant;
+	padding: 0;
+	margin-top: 6px;
+	margin-right: 6px;
+	min-width: 22px;
+	min-height: 22px;
 }
 
 .close-button:hover {
-  background: rgba(243, 139, 168, 0.30);
-  color: #f38ba8;
+	background: @error;
+	color: @on_error;
 }
 
 /* ---------- Notification image ---------- */
 .notification-body-image {
-  border-radius: 8px;
-  margin-top: 6px;
+	border-radius: 10px;
+	margin-top: 6px;
 }
 
 /* ---------- Inline reply ---------- */
 .inline-reply {
-  margin-top: 8px;
+	margin-top: 10px;
 }
 
 .inline-reply-entry {
-  background: rgba(49, 50, 68, 0.80);
-  border: 1px solid rgba(69, 71, 90, 0.60);
-  border-radius: 8px;
-  color: #cdd6f4;
-  caret-color: #cba6f7;
-  padding: 6px 10px;
+	background: alpha(@surface_container_high, 0.85);
+	border: 1px solid alpha(@outline_variant, 0.55);
+	border-radius: 10px;
+	color: @on_surface;
+	caret-color: @primary;
+	padding: 8px 12px;
 }
 
 .inline-reply-entry:focus {
-  border-color: rgba(203, 166, 247, 0.60);
+	border-color: @primary;
 }
 
 .inline-reply-button {
-  background: rgba(203, 166, 247, 0.20);
-  border: 1px solid rgba(203, 166, 247, 0.40);
-  border-radius: 8px;
-  color: #cba6f7;
-  padding: 6px 12px;
-  margin-left: 4px;
+	background: alpha(@primary, 0.22);
+	border: 1px solid alpha(@primary, 0.5);
+	border-radius: 10px;
+	color: @primary;
+	padding: 8px 14px;
+	margin-left: 6px;
 }
 
 .inline-reply-button:hover {
-  background: rgba(203, 166, 247, 0.35);
+	background: @primary;
+	color: @on_primary;
 }
 
 /* ---------- Scrollbar ---------- */
-scrolledwindow > scrollbar {
-  background: transparent;
-  border: none;
+scrolledwindow>scrollbar {
+	background: transparent;
+	border: none;
 }
 
-scrolledwindow > scrollbar slider {
-  background: rgba(69, 71, 90, 0.60);
-  border-radius: 999px;
-  min-width: 4px;
-  min-height: 4px;
+scrolledwindow>scrollbar slider {
+	background: alpha(@outline_variant, 0.6);
+	border-radius: 999px;
+	min-width: 4px;
+	min-height: 4px;
 }
 
-scrolledwindow > scrollbar slider:hover {
-  background: rgba(203, 166, 247, 0.50);
+scrolledwindow>scrollbar slider:hover {
+	background: @primary;
 }

@@ -1,0 +1,42 @@
+# matugen — generates Material You palettes from the current wallpaper
+# and writes them into templates for each app.
+
+[config]
+reload_apps = true
+
+# ---------- Shared GTK CSS palette (waybar / wofi / swaync) ----------
+[templates.waybar]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/waybar/colors.css"
+post_hook = "pkill -SIGUSR2 waybar 2>/dev/null || true"
+
+[templates.wofi]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/wofi/colors.css"
+
+[templates.swaync]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/swaync/colors.css"
+post_hook = "swaync-client -rs 2>/dev/null || true"
+
+# ---------- Kitty terminal theme ----------
+[templates.kitty]
+input_path = "~/.config/matugen/templates/kitty-theme.conf"
+output_path = "~/.config/kitty/matugen-theme.conf"
+post_hook = "pkill -SIGUSR1 kitty 2>/dev/null || true"
+
+# ---------- Hyprland window-manager colors ----------
+[templates.hyprland]
+input_path = "~/.config/matugen/templates/hyprland-colors.conf"
+output_path = "~/.config/hypr/colors.conf"
+post_hook = "hyprctl reload 2>/dev/null || true"
+
+# ---------- Hyprlock lock screen accents ----------
+[templates.hyprlock]
+input_path = "~/.config/matugen/templates/hyprlock-colors.conf"
+output_path = "~/.config/hypr/hyprlock-colors.conf"
+
+# ---------- Rofi launcher palette ----------
+[templates.rofi]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors.rasi"

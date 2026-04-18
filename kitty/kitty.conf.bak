@@ -2,8 +2,8 @@
 
 
 # BEGIN_KITTY_THEME
-# Matugen (generated from wallpaper)
-include matugen-theme.conf
+# YsDark
+include current-theme.conf
 # END_KITTY_THEME
 
 #: Fonts {{{
@@ -2931,12 +2931,10 @@ enabled_layouts *
 
 
 # BEGIN_KITTY_FONTS
-font_family      family="JetBrainsMono Nerd Font"
-font_size        13.0
+font_family      family="Ubuntu Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
-modify_font      cell_height 125%
 # END_KITTY_FONTS
 
 #KITTY THEMES CONFIG
@@ -2948,26 +2946,10 @@ dynamic_background_opacity yes
 padding_width 10
 window_padding_width 20
 
-
-kitty_mod super
-
-map kitty_mod+_ launch --location=hsplit --cwd=current
-map kitty_mod+| launch --location=vsplit --cwd=current
-
-map shift+up move_window up
-map shift+left move_window left
-map shift+right move_window right
-map shift+down move_window down
 #DANK Configuration
 
 scrollback_lines 3000
 copy_on_select yes
-# Enable cursor trail (number represents length of trail)
-cursor_trail 3
-# Adjust decay rate (0-1). Lower is smoother/longer tail
-cursor_trail_decay_rate 0.2
-# Optional: Set decay for different cursor states
-cursor_trail_start_threshold 2
 # strip_trailing_spaces smart
 # tab_bar_style powerline
 # tab_bar_align left

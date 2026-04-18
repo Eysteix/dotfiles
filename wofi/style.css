@@ -1,0 +1,114 @@
+/* ============================================================
+   Wofi — Material You (matugen)
+   Squircle shell · opaque surface · accent-driven selection
+   ============================================================ */
+
+@import url("file:///home/steix/.config/wofi/colors.css");
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ---------- Window shell (squircle) ---------- */
+window {
+  background: @surface;
+  background-color: @surface;
+  border: 1px solid @outline_variant;
+  border-radius: 4px;
+  padding: 0;
+  color: @on_surface;
+  box-shadow: 0 24px 60px alpha(@shadow, 0.6);
+}
+
+/* ---------- Outer container ---------- */
+#outer-box {
+  background: @surface;
+  background-color: @surface;
+  padding: 20px;
+  margin: 0;
+  border-radius: 34px;
+}
+
+/* ---------- Search bar (squircle pill) ---------- */
+#input {
+  background: @surface_container;
+  background-color: @surface_container;
+  border: 1px solid @outline_variant;
+  border-radius: 10px;
+  padding: 6px 18px;
+  margin: 0 0 14px 0;
+  color: @on_surface;
+  caret-color: @primary;
+  outline: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#input:focus {
+  border-color: @primary;
+  background: @surface_container_high;
+  background-color: @surface_container_high;
+}
+
+#input placeholder,
+#input image {
+  color: @on_surface_variant;
+}
+
+/* ---------- Scroll container ---------- */
+#scroll {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+#inner-box {
+  background: transparent;
+  padding: 0 2px;
+  margin: 0;
+}
+
+/* ---------- Rows (squircle) ---------- */
+#entry {
+  background: transparent;
+  padding: 10px 14px;
+  margin: 3px 0;
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+#entry:hover {
+  background-color: alpha(@primary, 0.12);
+}
+
+#entry:selected {
+  background-color: @primary;
+  outline: none;
+}
+
+#entry:selected #text,
+#entry:selected * {
+  color: @on_primary;
+}
+
+/* ---------- Icon & text ---------- */
+#img {
+  margin-right: 12px;
+}
+
+#text {
+  color: @on_surface;
+  margin: 0;
+}
+
+/* ---------- Scrollbar hidden ---------- */
+scrollbar,
+scrollbar slider {
+  background: transparent;
+  border: none;
+  min-width: 0;
+  min-height: 0;
+}
