@@ -13,8 +13,8 @@ CHOICE=$(printf "%s\n%s\n%s\n%s\n%s" \
   | wofi \
       --dmenu \
       --prompt="Power" \
-      --width=260 \
-      --height=270 \
+      --width=360 \
+      --height=320 \
       --location=center \
       --no-actions \
       --insensitive \
@@ -24,7 +24,7 @@ CHOICE=$(printf "%s\n%s\n%s\n%s\n%s" \
 [[ -z "$CHOICE" ]] && exit 0
 
 case "$CHOICE" in
-  "$LOCK")     ~/.config/waybar/scripts/lock.sh ;;
+  "$LOCK")    ~/.local/share/quickshell-lockscreen/lock.sh;;
   "$SUSPEND")  systemctl suspend ;;
   "$LOGOUT")   hyprctl dispatch exit ;;
   "$REBOOT")   systemctl reboot ;;

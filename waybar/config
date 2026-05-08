@@ -1,11 +1,12 @@
 {
 	"layer": "top",
 	"position": "top",
-	"height": 30,
+	"height": 25,
 	"margin-top": 10,
 	"margin-left": 16,
 	"margin-right": 16,
 	"modules-left": [
+		"custom/batteryhealth",
 		"clock"
 	],
 	"modules-center": [
@@ -21,17 +22,14 @@
 	"hyprland/workspaces": {
 		"format": "{icon}",
 		"on-click": "activate",
-		"format-icons": {
-			"1": "  ",
-			"2": " 󰾔 ",
-			"3": " 󰙯 ",
-			"4": " 󰓓 ",
-			"5": " 󰓇 ",
-			"6": "  ",
-			"7": "  ",
-			"urgent": "",
-			"default": ""
-		},
+		// "format-icons": {
+		// 	"1": " 1 ",
+		// 	"2": " 2 ",
+		// 	"3": " 3 ",
+		// 	"4": " 4 ",
+		// 	"urgent": "",
+		// 	"default": ""
+		// },
 		"active-only": false,
 		"all-outputs": true,
 		"sort-by-number": true,
@@ -40,10 +38,7 @@
 				1,
 				2,
 				3,
-				4,
-				5,
-				6,
-				7
+				4
 			]
 		}
 	},
@@ -51,6 +46,11 @@
 		"format": "󰃰  {:%I:%M %p}",
 		"format-alt": "󰃰  {:%A, %d %b}",
 		"tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+	},
+	"custom/batteryhealth": {
+		"exec": "upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep 'capacity:' | awk '{print $2}'",
+		"interval": 300,
+		"format": "{}"
 	},
 	"network": {
 		"interface": "wl*",
@@ -61,11 +61,11 @@
 		"format-linked": "󰈀  No IP",
 		"tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}",
 		"tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-		"on-click": "~/.config/waybar/scripts/network-menu.sh"
-	},
-	"custom/netsep": {
-		"format": "·",
-		"tooltip": false
+		"on-click": "~/.config/waybar/scripts/network-menu.sh",
+		"custom/netsep": {
+			"format": "·",
+			"tooltip": false
+		}
 	},
 	"pulseaudio": {
 		"format": "{icon}  {volume}%",
