@@ -7,10 +7,11 @@
 
 /* ---------- Global reset ---------- */
 * {
-	font-family: "The Last Shuriken", "JetBrainsMono Nerd Font", monospace;
+	font-family: "SF Pro Display", "Maple Mono NF", "JetBrainsMono Nerd Font", "FantasqueSansMono Nerd Font Mono", "The Last Shuriken", monospace;
 	font-size: 13px;
+	font-weight: bold;
 	border: none;
-	border-radius: 8;
+	border-radius: 8px;
 	min-height: 0;
 	min-width: 0;
 }
@@ -31,17 +32,19 @@ window#waybar {
 
 /* ---------- Shared pill style ---------- */
 #clock,
-#workspaces,
 #network,
 #pulseaudio,
 #battery,
 #custom-netspeed,
+#custom-updates,
 #custom-powerprofile,
 #custom-batteryhealth,
-#custom-swaync {
-	background: @base;
-	padding: 0 14px;
-	margin: 4px 4px;
+#custom-swaync,
+#custom-launcher {
+	background: @background;
+	padding: 0 15px 0 15px;
+	margin: 0 0 0 12px;
+	border-radius: 50px;
 	transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -66,24 +69,38 @@ window#waybar {
 	font-size: 10px;
 }
 
-/* ---------- Workspaces pill ---------- */
+/* ---------- Launcher ---------- */
+#custom-launcher {
+	color: @primary;
+	font-size: 16px;
+	padding: 0 12px;
+}
+
+#custom-launcher:hover {
+	background: @primary;
+	color: @on_primary;
+}
+
+/* ---------- Workspaces ---------- */
 #workspaces {
-	padding: 0 10px;
-	border-radius: 10px;
+	background: @background;
+	padding: 8px 5px;
+	border-radius: 16px;
+	color: @text;
 }
 
 #workspaces button {
-	/* targeted resets only — no all:unset which breaks glyph rendering */
-	background-color: @base;
-	background-image: none;
-	margin: 0 2px;
-	font-size: 18px;
-	border-radius: 8px;
+	background-color: #424242;
+	color: transparent;
+	font-size: 9px;
+	padding: 0 6px;
+	margin: 0 3px;
+	min-width: 0;
 	border: none;
+	border-radius: 50px;
 	box-shadow: none;
 	outline: none;
-	color: @overlay0;
-	transition: background-color 0.2s ease, color 0.2s ease;
+	transition: all 0.2s ease;
 }
 
 #workspaces button * {
@@ -91,20 +108,33 @@ window#waybar {
 }
 
 #workspaces button:hover {
-	background-color: @surface0;
-	color: @text;
+	color: rgba(200, 210, 225, 0.7);
+	border-radius: 16px;
+	min-width: 50px;
+	background-size: 400% 400%;
+	background: transparent;
+	box-shadow: none;
 }
 
-#workspaces button.active,
-#workspaces button.focused {
-	box-shadow: inset 0 -2px 0 @shadow;
-	background-color: @primary;
-	color: @on_primary;
+/* Active workspace — filled pill with number */
+#workspaces button.active {
+	background: rgb(121, 134, 200);
+	color: #ffffff;
+	font-size: 13px;
+	min-width: 50px;
+	font-weight: 600;
+	padding: 2px 14px;
+	border-radius: 5px;
+	margin: 0 3px;
+}
+
+/* Empty (persistent but unused) workspaces */
+#workspaces button.empty {
+	color: rgba(200, 210, 225, 0.3);
 }
 
 #workspaces button.urgent {
-	background-color: @red ;
-	color: @red;
+	color: rgba(200, 210, 225, 0.3);
 }
 
 /* ---------- Clock ---------- */
@@ -123,7 +153,7 @@ window#waybar {
 
 #network:hover {
 	background: @teal;
-	color:@black;
+	color: @on_tertiary;
 }
 
 #network.disconnected {
@@ -134,6 +164,16 @@ window#waybar {
 #custom-netspeed {
 	color: @text;
 	font-size: 11px;
+}
+
+/* ---------- Updates ---------- */
+#custom-updates {
+	color: @peach;
+}
+
+#custom-updates:hover {
+	background: @peach;
+	color: @on_secondary;
 }
 
 /* ---------- Pulseaudio ---------- */
@@ -187,13 +227,25 @@ window#waybar {
 	background: @green;
 }
 
+/* ---------- Battery health ---------- */
+#custom-batteryhealth {
+	color: @text;
+}
+
+#custom-batteryhealth:hover {
+	background: @tertiary;
+	color: @on_tertiary;
+}
+
 /* ---------- SwayNC bell ---------- */
 #custom-swaync {
+	margin: 0 12px;
 	color: @sapphire;
 }
 
 #custom-swaync:hover {
 	background: @sapphire;
+	color: @on_primary;
 }
 
 /* ---------- Tooltips ---------- */

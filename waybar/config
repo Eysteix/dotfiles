@@ -1,71 +1,73 @@
 {
+	"ipc": true,
 	"layer": "top",
 	"position": "top",
-	"height": 25,
+	"height": 30,
 	"margin-top": 10,
 	"margin-left": 16,
 	"margin-right": 16,
 	"modules-left": [
-		"custom/batteryhealth",
+		"custom/launcher",
+		"custom/updates",
 		"clock"
 	],
 	"modules-center": [
-		"hyprland/workspaces"
+		"custom/swaync",
+		"hyprland/workspaces",
+		"custom/powerprofile"
 	],
 	"modules-right": [
-		"network",
-		"pulseaudio",
 		"battery",
-		"custom/powerprofile",
-		"custom/swaync"
+		"pulseaudio",
+		"network",
+		"custom/batteryhealth"
 	],
+	"custom/updates": {
+		"exec": "~/.config/waybar/scripts/updates.sh",
+		"interval": 1800,
+		"format": "{}",
+		"tooltip": false
+	},
+	"custom/launcher": {
+		"format": "",
+		"on-click": "rofi -show drun",
+		"tooltip": false
+	},
 	"hyprland/workspaces": {
-		"format": "{icon}",
+		"format": "{id}",
+		"format-icons": {
+			"default": "",
+			"empty": "",
+			"urgent": ""
+		},
+		"persistent/workspaces": {
+			"*": 5
+		},
 		"on-click": "activate",
-		// "format-icons": {
-		// 	"1": " 1 ",
-		// 	"2": " 2 ",
-		// 	"3": " 3 ",
-		// 	"4": " 4 ",
-		// 	"urgent": "",
-		// 	"default": ""
-		// },
-		"active-only": false,
-		"all-outputs": true,
-		"sort-by-number": true,
-		"persistent-workspaces": {
-			"*": [
-				1,
-				2,
-				3,
-				4
-			]
-		}
+		"on-scroll-up": "hyprctl dispatch workspace e+1",
+		"on-scroll-down": "hyprctl dispatch workspace e-1"
 	},
 	"clock": {
-		"format": "󰃰  {:%I:%M %p}",
+		"format": "󰥔  {:%I:%M %p}",
 		"format-alt": "󰃰  {:%A, %d %b}",
 		"tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
 	},
 	"custom/batteryhealth": {
 		"exec": "upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep 'capacity:' | awk '{print $2}'",
 		"interval": 300,
-		"format": "{}"
+		"format": "󱈑 {}",
+		"tooltip": false
 	},
 	"network": {
 		"interface": "wl*",
-		"interval": 2,
-		"format-wifi": "󰤨  {essid}    󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
-		"format-ethernet": "󰈀  {ifname}    󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+		"interval": 5,
+		"format-wifi": "󰤨    {essid}",
+		"format-ethernet": "󰈀  {ifname}",
 		"format-disconnected": "󰤭  No Signal",
 		"format-linked": "󰈀  No IP",
-		"tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}",
+		"tooltip-format-wifi": "{essid} · {signalStrength}%\n{ipaddr}\n↓ {bandwidthDownBytes}  ↑ {bandwidthUpBytes}",
 		"tooltip-format-ethernet": "{ifname}\n{ipaddr}",
-		"on-click": "~/.config/waybar/scripts/network-menu.sh",
-		"custom/netsep": {
-			"format": "·",
-			"tooltip": false
-		}
+		"on-click": "~/.config/waybar/scripts/network-menu.sh"
 	},
 	"pulseaudio": {
 		"format": "{icon}  {volume}%",

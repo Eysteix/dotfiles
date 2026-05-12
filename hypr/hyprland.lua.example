@@ -1,0 +1,226 @@
+-- hyprland.lua
+-- Hyprland 0.55+ Lua config reference
+-- Location: ~/.config/hypr/hyprland.lua
+-- Wiki: https://wiki.hypr.land/Configuring/Start/
+-- LSP stubs: /usr/share/hypr/stubs/ (point lua-language-server here)
+
+-- ============================================================
+-- NOTES FOR CLAUDE CODE
+-- ============================================================
+-- 1. All API lives under `hl.*`
+-- 2. Dispatchers are `hl.dsp.*` and were rewritten from scratch.
+--    They do NOT 1:1 map old hyprlang dispatchers — check meta/ in
+--    the Hyprland repo for the full list.
+-- 3. Window rules use `match = { ... }` tables, not comma-soup strings.
+-- 4. `require()` creates an isolated Lua scope. Errors in one required
+--    file won't kill siblings. Prefer splitting over one big file.
+-- 5. `hl.config({...})` is additive across calls — call it as many
+--    times as you want, nested tables merge.
+-- 6. Scripts have execution-time limits; runaway loops get killed.
+-- 7. Standard Lua libs are loaded. Lua can run arbitrary code — only
+--    `require()` files you trust.
+
+-- ============================================================
+-- VARIABLES (plain Lua — use them everywhere)
+-- ============================================================
+local mainMod     = "SUPER"
+local terminal    = "kitty"
+local fileManager = "dolphin"
+local menu        = "hyprlauncher"
+local browser     = "firefox"
+
+-- ============================================================
+-- MONITORS
+-- hl.monitor({ output, mode, position, scale, transform?, mirror?, ... })
+-- output = "" matches any unconfigured monitor (fallback)
+-- ============================================================
+hl.monitor({
+    output   = "",
+    mode     = "preferred",
+    position = "auto",
+    scale    = "auto",
+})
+
+-- Example explicit monitor:
+-- hl.monitor({
+--     output   = "DP-1",
+--     mode     = "2560x1440@165",
+--     position = "0x0",
+--     scale    = 1,
+-- })
+
+-- ============================================================
+-- CORE CONFIG
+-- Nested tables replace the old `section { key = value }` blocks.
+-- Call hl.config() multiple times; tables merge.
+-- ============================================================
+hl.config({
+    general = {
+        gaps_in     = 4,
+        gaps_out    = 8,
+        border_size = 2,
+        layout      = "dwindle",
+        resize_on_border = true,
+    },
+
+    decoration = {
+        rounding = 6,
+        blur = {
+            enabled = true,
+            size    = 3,
+            passes  = 2,
+        },
+    },
+
+    input = {
+        kb_layout    = "us",
+        follow_mouse = 1,
+        sensitivity  = 0,
+        touchpad = {
+            natural_scroll = true,
+            tap_to_click   = true,
+        },
+    },
+
+    animations = {
+        enabled = true,
+    },
+
+    dwindle = {
+        pseudotile     = true,
+        preserve_split = true,
+    },
+
+    misc = {
+        disable_hyprland_logo = false,
+        force_default_wallpaper = -1,
+    },
+})
+
+-- ============================================================
+-- AUTOSTART
+-- hl.dsp.exec_cmd runs a shell command. Use hl.dispatch() to fire it
+-- immediately, or pass it as a bind action.
+-- ============================================================
+hl.dispatch(hl.dsp.exec_cmd("hyprpaper"))
+hl.dispatch(hl.dsp.exec_cmd("waybar"))
+hl.dispatch(hl.dsp.exec_cmd("dunst"))
+
+-- ============================================================
+-- KEYBINDS
+-- hl.bind("MOD + KEY", action)
+-- action = either an hl.dsp.* dispatcher OR a Lua function
+-- ============================================================
+
+-- Apps
+hl.bind(mainMod .. " + Q",       hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + E",       hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + R",       hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + B",       hl.dsp.exec_cmd(browser))
+
+-- Window management
+hl.bind(mainMod .. " + C",       hl.dsp.window.kill())
+hl.bind(mainMod .. " + V",       hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + F",       hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + P",       hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + J",       hl.dsp.window.togglesplit())
+
+-- Focus (arrow keys)
+hl.bind(mainMod .. " + left",    hl.dsp.window.move_focus({ direction = "l" }))
+hl.bind(mainMod .. " + right",   hl.dsp.window.move_focus({ direction = "r" }))
+hl.bind(mainMod .. " + up",      hl.dsp.window.move_focus({ direction = "u" }))
+hl.bind(mainMod .. " + down",    hl.dsp.window.move_focus({ direction = "d" }))
+
+-- Workspaces 1-10
+for i = 1, 10 do
+    local key = tostring(i % 10)  -- 10 -> "0"
+    hl.bind(mainMod .. " + " .. key,
+        hl.dsp.workspace.switch({ workspace = i }))
+    hl.bind(mainMod .. " + SHIFT + " .. key,
+        hl.dsp.window.move_to_workspace({ workspace = i }))
+end
+
+-- Mouse drag bindings
+hl.bindm(mainMod, "mouse:272", hl.dsp.window.move())
+hl.bindm(mainMod, "mouse:273", hl.dsp.window.resize())
+-- Exit
+hl.bind(mainMod .. " + M", hl.dsp.exit())
+
+-- ============================================================
+-- CONDITIONAL BINDS (Lua functions as actions)
+-- ============================================================
+hl.bind(mainMod .. " + X", function()
+    local w = hl.get_active_window()
+    if w and w.title == "htop" then
+        hl.dispatch(hl.dsp.window.float({ action = "set" }))
+    else
+        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+    end
+end)
+
+-- Toggle gaps between 0 and 4
+hl.bind(mainMod .. " + SHIFT + G", function()
+    local gaps = hl.get_config("general.gaps_in")
+    if gaps.top == 4 then
+        hl.config({ general = { gaps_in = 0 } })
+    else
+        hl.config({ general = { gaps_in = 4 } })
+    end
+end)
+
+-- ============================================================
+-- WINDOW RULES
+-- match = { class = "...", title = "...", ... } (regex)
+-- Other fields on the rule set the behavior.
+-- ============================================================
+hl.windowrule({
+    match = { class = "^(firefox)$" },
+    workspace = 2,
+})
+
+hl.windowrule({
+    match = { class = "^(pavucontrol)$" },
+    float = true,
+    size  = "600 400",
+    center = true,
+})
+
+hl.windowrule({
+    match = { title = "^(Picture-in-Picture)$" },
+    float = true,
+    pin   = true,
+})
+
+-- ============================================================
+-- EVENTS (the actually-new capability)
+-- hl.on("event.name", function(payload) ... end)
+-- ============================================================
+hl.on("window.active", function(w)
+    -- Fires every time the focused window changes
+    -- print("Focused: " .. (w.title or "<no title>"))
+end)
+
+hl.on("workspace.move_to_monitor", function(ws, m)
+    hl.notification.create({
+        text    = "Workspace " .. ws.name .. " moved to " .. m.name,
+        timeout = 3000,
+        icon    = "ok",
+    })
+end)
+
+-- ============================================================
+-- TIMERS
+-- ============================================================
+-- local battery_check = hl.timer(function()
+--     -- runs every 60s
+-- end, { timeout = 60000, type = "repeat" })
+-- battery_check:set_enabled(true)
+
+-- ============================================================
+-- SPLITTING THE CONFIG (recommended)
+-- Each require() is its own scope. Errors don't propagate.
+-- ============================================================
+-- require("monitors")
+-- require("keybinds")
+-- require("rules")
+-- require("autostart")
